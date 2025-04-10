@@ -2,10 +2,10 @@ env: "local"
 
 database:
   host: "localhost"
-  port: "5432"
+  port: "5435"
   user: "postgres"
   dbname: "avito"
-  max_attempts: 10
+  max_attempts: 5
 
 servers:
   http:
