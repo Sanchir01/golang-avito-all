@@ -1,13 +1,16 @@
 package user
 
 import (
+	"errors"
+	"log/slog"
+	"net/http"
+	"time"
+
 	"github.com/Sanchir01/golang-avito/pkg/lib/api"
 	sl "github.com/Sanchir01/golang-avito/pkg/lib/log"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator/v10"
-	"log/slog"
-	"net/http"
 )
 
 type Handler struct {
@@ -40,4 +43,25 @@ func (h *Handler) RegistrationHandler(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, api.Error("invalid request"))
 		return
 	}
+	newuser, err := h.Service.RegistrationsService(r.Context(), req.Email, req.Role, req.Password)
+	if errors.Is(err, api.InvalidPassword) {
+		log.Info("password error", sl.Err(err))
+		render.JSON(w, r, api.Error("Введен неправильный пароль"))
+		return
+	}
+	if err != nil {
+		log.Error("failed auth user", sl.Err(err))
+		render.JSON(w, r, api.Error("failed, auth user"))
+		return
+	}
+	log.Info("success register")
+	token, err := GenerateJwtToken(newuser.ID, newuser.Role, newuser.Email, time.Now().Add(14*24*time.Hour))
+
+	render.JSON(w, r, ResponseRegister{
+		Response: api.OK(),
+		ID:       newuser.ID,
+		Role:     newuser.Role,
+		Email:    newuser.Email,
+		Token:    token,
+	})
 }

@@ -1,6 +1,9 @@
 package user
 
-import "github.com/google/uuid"
+import (
+	"github.com/Sanchir01/golang-avito/pkg/lib/api"
+	"github.com/google/uuid"
+)
 
 type DBUser struct {
 	ID      uuid.UUID `db:"id"`
@@ -15,8 +18,9 @@ type RequestRegister struct {
 	Role     string `json:"role" validate:"required"`
 }
 type ResponseRegister struct {
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=6"`
-	Role     string `json:"role" validate:"required"`
-	Token    string `json:"token"`
+	api.Response
+	ID    uuid.UUID `json:"id"`
+	Email string    `json:"email"`
+	Role  string    `json:"role" `
+	Token string    `json:"token" `
 }

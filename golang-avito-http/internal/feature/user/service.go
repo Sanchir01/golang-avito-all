@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"errors"
+
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -52,5 +53,6 @@ func (s *Service) RegistrationsService(ctx context.Context, email, role string, 
 	if err != nil {
 		return nil, err
 	}
+
 	return newUser, nil
 }

@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -19,9 +20,9 @@ func NewRepository(primaryDB *pgxpool.Pool) *Repository {
 func (repo *Repository) Register(ctx context.Context, email, role string, password []byte, tx pgx.Tx) (*DBUser, error) {
 	query, arg, err := sq.
 		Insert("users").
-		Columns("title", "phone", "email", "role", "password").
+		Columns("email", "role", "password").
 		Values(email, role, password).
-		Suffix("RETURNING id, phone, role, email").
+		Suffix("RETURNING id, role, email").
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 
@@ -38,6 +39,7 @@ func (repo *Repository) Register(ctx context.Context, email, role string, passwo
 	}
 
 	return &DBUser{
+		ID:      users.ID,
 		Role:    users.Role,
 		Email:   users.Email,
 		Version: users.Version,
