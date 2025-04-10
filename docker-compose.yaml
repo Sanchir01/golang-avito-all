@@ -5,8 +5,8 @@ services:
     ports:
       - "5435:5432"
     environment:
-      - POSTGRES_DATABASE=avito
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=postgres
+      - POSTGRES_PASSWORD=avito
       - POSTGRES_USER=postgres
   dbgrpc:
     restart: always
@@ -14,23 +14,23 @@ services:
     ports:
       - "5433:5433"
     environment:
-      - POSTGRES_DATABASE=avitogrpc
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=postgres
+      - POSTGRES_PASSWORD=avito
       - POSTGRES_USER=postgres
-  httpserver:
-    image: http-server-image:latest
-    build:
-      context: ./httpserver
-    ports:
-      - "3000:3000"
-  grpcserver:
-    image: grpc-server-image:latest
-    build:
-      context: ./grpcserver
-    ports:
-      - "8080:8080"
+#  httpserver:
+#    image: http-server-image:latest
+#    build:
+#      context: ./golang-avito-http
+#    ports:
+#      - "3000:3000"
+#  grpcserver:
+#    image: grpc-server-image:latest
+#    build:
+#      context: ./golang-avito-grpc
+#    ports:
+#      - "8080:8080"
 volumes:
-  db:
+  dbhttp:
   dbgrpc:
-  httpserver:
-  grpcserver:
+#  httpserver:
+#  grpcserver:
